@@ -1,0 +1,102 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MinGW-w64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: false
+          install: mingw-w64-x86_64-gcc
+          cache: true
+
+      - name: Build
+        shell: pwsh
+        run: |
+          $env:Path = "C:\msys64\mingw64\bin;$env:Path"
+          ./build.ps1
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $stage = Join-Path $PWD 'pkg/QingHuaBan'
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item 'HAVEGET-Whiteboard.exe' (Join-Path $stage 'QingHuaBan.exe')
+
+          $readme = @(
+            "轻画板 $tag — 便携版",
+            "",
+            "双击 QingHuaBan.exe 直接运行，无需安装、无需联网。",
+            "",
+            "本产物由 GitHub Actions 从未修改的源码构建，未做代码签名：",
+            "首次运行可能触发 SmartScreen，点「更多信息」->「仍要运行」。",
+            "",
+            "源码与构建说明：https://github.com/Tendo-Iya/QingHuaBan"
+          ) -join "`r`n"
+          Set-Content -Path (Join-Path $stage '运行说明.txt') -Value $readme -Encoding UTF8
+
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $zip = Join-Path $PWD "QingHuaBan-$tag-win64.zip"
+          [System.IO.Compression.ZipFile]::CreateFromDirectory(
+            (Join-Path $PWD 'pkg'), $zip,
+            [System.IO.Compression.CompressionLevel]::Optimal, $true,
+            [System.Text.Encoding]::UTF8)
+
+          $sha = (Get-FileHash $zip -Algorithm SHA256).Hash
+          "size: {0:N0} bytes" -f (Get-Item $zip).Length
+          "sha256: $sha"
+          "SHA=$sha"      | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "TAG=$tag"      | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "ZIP=$(Split-Path $zip -Leaf)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Write release notes
+        shell: pwsh
+        run: |
+          $lines = @(
+            "由 GitHub Actions 从未修改的源码构建，原生 C++ Win32 + GDI+，无运行时依赖。",
+            "",
+            "## 安装",
+            "",
+            "解压 ``$env:ZIP``，双击 ``QingHuaBan.exe`` 即可运行，无需安装、无需联网。",
+            "",
+            "## 关于代码签名",
+            "",
+            "本产物**未签名**。首次运行可能触发 SmartScreen「Windows 已保护你的电脑」，",
+            "点「更多信息」->「仍要运行」即可。",
+            "",
+            "需要带自签名证书的完整安装包，请使用手动发布的 v1.0.0。",
+            "",
+            "## 校验",
+            "",
+            "``````",
+            "SHA256 ($env:ZIP): $env:SHA",
+            "``````"
+          ) -join "`r`n"
+          Set-Content -Path 'release-notes.md' -Value $lines -Encoding UTF8
+
+      - name: Create release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create $env:TAG "$env:ZIP" `
+            --title "轻画板 $env:TAG" `
+            --notes-file release-notes.md `
+            --verify-tag
