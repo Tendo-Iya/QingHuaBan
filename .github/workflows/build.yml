@@ -1,0 +1,56 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-x64:
+    name: Windows x64 (MinGW-w64)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MinGW-w64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: false
+          install: mingw-w64-x86_64-gcc
+          cache: true
+
+      - name: Show toolchain
+        shell: pwsh
+        run: |
+          $env:Path = "C:\msys64\mingw64\bin;$env:Path"
+          g++ --version | Select-Object -First 1
+          windres --version | Select-Object -First 1
+
+      - name: Build
+        shell: pwsh
+        run: |
+          $env:Path = "C:\msys64\mingw64\bin;$env:Path"
+          ./build.ps1
+
+      - name: Verify output
+        shell: pwsh
+        run: |
+          $exe = Get-Item 'HAVEGET-Whiteboard.exe' -ErrorAction Stop
+          "size   : {0:N0} bytes" -f $exe.Length
+          "sha256 : " + (Get-FileHash $exe -Algorithm SHA256).Hash
+          if ($exe.Length -lt 500KB) { throw "产物异常偏小，可能链接失败" }
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: QingHuaBan-win64
+          path: HAVEGET-Whiteboard.exe
+          if-no-files-found: error
+          retention-days: 14

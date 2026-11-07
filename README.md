@@ -5,7 +5,7 @@
 > **当前交付：HAVEGET工作室 自签名版**  
 > 签名发布者：`CN=HAVEGET工作室, O=HAVEGET工作室`；含 DigiCert RFC3161 时间戳；安装信任证书后 `Get-AuthenticodeSignature` 为 `Valid`。  
 > 自签名证书不是公共 CA 证书。微软官方说明：自签名在 SmartScreen 中与未签名等效。直接运行带下载标记的单个 EXE 仍会弹 SmartScreen；使用完整包中的 `install-and-run.cmd` 安装证书并解除下载标记后，本机 Win11 实测不再弹。  
-> 首次安装会出现一次 Windows“安装 HAVEGET Studio Root CA”证书确认，无法在自签名下消除。详见工作区根目录的 `轻画板-HAVEGET自签名版\使用说明.txt`；公共受信任证书/Store 路线见 [SIGNING.md](SIGNING.md)。
+> 首次安装会出现一次 Windows“安装 HAVEGET Studio Root CA”证书确认，无法在自签名下消除。详见 [Releases](https://github.com/Tendo-Iya/QingHuaBan/releases) 压缩包内的 `使用说明.txt`；公共受信任证书/Store 路线见 [SIGNING.md](SIGNING.md)。
 
 ## 功能
 
@@ -46,21 +46,21 @@
 .\build.ps1
 ```
 
-构建产物会复制到工作区根目录，文件名为 `轻画板.exe`。也可以直接运行 `build.bat`。  
+产物是仓库根目录下的 `HAVEGET-Whiteboard.exe`，脚本另外复制一份到仓库的上一级目录。也可以直接运行 `build.bat`。  
 签名应在构建完成后进行；再次构建会覆盖已签名文件。
 
 ## 文件
 
-- `src/`：C++ 源码
-- `assets/`：应用图标与资源
-- `QingHuaBan.exe`：未签名构建产物
-- `SIGNING.md`：公共证书/Store 路线与证书申请资料
+- `src/`：C++ 源码（Win32 + GDI+，纯手写，无 XAML、无框架依赖）
+- `installer/`：安装器源码与资源
+- `assets/`：应用图标与资源脚本
+- `tools/`：图标生成、演示文件生成、自签名脚本
+- `build.ps1` / `build.bat`：编译主程序
+- `build_installer.ps1`：编译安装包
 - `sign.ps1`：使用公共受信任证书签名并验证
-- `build/轻画板-unsigned.exe`：自签名前的备份
-- 工作区根目录：
-  - `轻画板.exe`：已自签名
-  - `轻画板-HAVEGET自签名版\`：完整分发包（证书、安装器、说明）
-  - `轻画板-HAVEGET自签名版.zip`：可直接分发的压缩包
-  - `轻画板-使用说明.txt`、`轻画板-预览.png`、`轻画板演示.qhb`
+- `SIGNING.md`：公共证书 / Microsoft Store 路线与证书申请资料
+- `preview.png`：界面预览
+
+编译产物（`build/`、`*.exe`）不纳入版本控制，由 `build.ps1` 生成。已编译好的安装包见 [Releases](https://github.com/Tendo-Iya/QingHuaBan/releases)。
 
 > 自签名版不能承诺所有 Win10/11 都零提示：直接运行下载的单个 EXE 仍可能触发 SmartScreen；安装器会解除下载标记并安装信任证书，使应用本体在测试机 Win11 上不再弹。要跨任意电脑稳定零提示，仍需 Microsoft Store 或公共受信任代码签名证书。
