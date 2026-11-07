@@ -7,6 +7,8 @@
 
 **[⬇ 下载最新版](https://github.com/Tendo-Iya/QingHuaBan/releases/latest)** —— 解压即用，无需安装。
 
+![界面预览](preview.png)
+
 即点即写的本地白板，原生 Windows 程序。完整自签名包首次运行一次安装脚本后，直接双击 `轻画板.exe` 即可使用，无需联网。
 
 > **当前交付：HAVEGET工作室 自签名版**  
@@ -71,3 +73,8 @@
 编译产物（`build/`、`*.exe`）不纳入版本控制，由 `build.ps1` 生成。已编译好的安装包见 [Releases](https://github.com/Tendo-Iya/QingHuaBan/releases)。
 
 > 自签名版不能承诺所有 Win10/11 都零提示：直接运行下载的单个 EXE 仍可能触发 SmartScreen；安装器会解除下载标记并安装信任证书，使应用本体在测试机 Win11 上不再弹。要跨任意电脑稳定零提示，仍需 Microsoft Store 或公共受信任代码签名证书。
+
+## 相关
+
+- [HAVEGET-DynamicIsland](https://github.com/Tendo-Iya/HAVEGET-DynamicIsland) —— Windows 顶部灵动岛，WPF 纯 C# 实现，同一作者
+- 作者主页：[Tendo-Iya](https://github.com/Tendo-Iya)
