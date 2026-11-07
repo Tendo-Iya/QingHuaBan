@@ -1,0 +1,36 @@
+#pragma code_page(65001)
+#include <windows.h>
+
+101 ICON "app.ico"
+201 RCDATA "payload_app.bin"
+202 RCDATA "root.cer"
+203 RCDATA "leaf.cer"
+
+1 VERSIONINFO
+FILEVERSION 1,8,2,4
+PRODUCTVERSION 1,8,2,4
+FILEFLAGSMASK 0x3fL
+FILEFLAGS 0x0L
+FILEOS 0x40004L
+FILETYPE 0x1L
+FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404B0"
+        BEGIN
+            VALUE "CompanyName", "HAVEGET工作室"
+            VALUE "FileDescription", "HAVEGET白板 安装器"
+            VALUE "FileVersion", "1.8.2.4"
+            VALUE "InternalName", "HAVEGETSetup"
+            VALUE "LegalCopyright", "© HAVEGET工作室"
+            VALUE "OriginalFilename", "HAVEGET白板安装器.exe"
+            VALUE "ProductName", "HAVEGET白板"
+            VALUE "ProductVersion", "1.8.2.4"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END

@@ -1,0 +1,19 @@
+# 构建产物
+build/
+*.exe
+*.o
+*.obj
+*.bin
+*.pdb
+*.ilk
+*.log
+
+# 签名中间文件
+*.pfx
+*.p12
+*.snk
+
+# 编辑器
+.vs/
+.vscode/
+*.user
