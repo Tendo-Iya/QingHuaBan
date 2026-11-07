@@ -1,5 +1,12 @@
 # 轻画板 v1.0
 
+[![release](https://img.shields.io/github/v/release/Tendo-Iya/QingHuaBan?label=release&sort=semver)](https://github.com/Tendo-Iya/QingHuaBan/releases/latest)
+[![downloads](https://img.shields.io/github/downloads/Tendo-Iya/QingHuaBan/total?label=downloads)](https://github.com/Tendo-Iya/QingHuaBan/releases)
+[![build](https://github.com/Tendo-Iya/QingHuaBan/actions/workflows/build.yml/badge.svg)](https://github.com/Tendo-Iya/QingHuaBan/actions/workflows/build.yml)
+[![license](https://img.shields.io/github/license/Tendo-Iya/QingHuaBan?label=license)](https://github.com/Tendo-Iya/QingHuaBan/blob/main/LICENSE)
+
+**[⬇ 下载最新版](https://github.com/Tendo-Iya/QingHuaBan/releases/latest)** —— 解压即用，无需安装。
+
 即点即写的本地白板，原生 Windows 程序。完整自签名包首次运行一次安装脚本后，直接双击 `轻画板.exe` 即可使用，无需联网。
 
 > **当前交付：HAVEGET工作室 自签名版**  
